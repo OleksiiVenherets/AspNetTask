@@ -1,0 +1,120 @@
+﻿@model FinalTask.WebUI.Models.AddVisitViewModel
+
+@{
+    ViewBag.Title = "Додати візит";
+}
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<h2>Додати візит</h2>
+
+@using (Html.BeginForm()) 
+{
+    @Html.AntiForgeryToken()
+  
+        <h4>Додавання інформації про візит</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        <div class="form-group">
+            @Html.LabelFor(model => model.CityName, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input type="text" name="CityName" class="form-control" id="cityname" /> 
+            </div>
+        </div>
+        <div id="map" style="height: 400px"></div>
+        <div>
+            <form method="post" action="AddVisit">
+                            <label>Додати коментар</label>
+                            <textarea rows="4" cols="45" name="Comment"></textarea>
+                            <input id="city" type="text" name="CityName" class="field left" style="display:none">
+                            <input id="lat" type="text" name="Latitude" class="field left" style="display:none">
+                            <input id="lon" type="text" name="Longitude" class="field left" style="display: none">
+                                 <label>Дата візиту</label>
+                            <input id="date" type="date" name="Date" class="field left">
+                                 <label>Рейтинг</label>
+                            <input id="rate" type="text" name="Rate" class="field left">
+                <p>
+                    <input type="submit" class="btn btn-primary" value="Додати" />
+                </p>
+            </form>
+        </div>
+}
+@section scripts{
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5nbL9z4qIWU8bD6bLqnFC7dxvlT6wDas&libraries=places&callback=Initialize" asynk defer>
+</script>
+    <section class="scripts">
+    <script type="text/javascript">
+        var map;
+        $(document).ready(function() {
+            Initialize();
+
+            var input = (document.getElementById('cityname'));
+
+            var autocomplete = new google.maps.places.Autocomplete(input);
+            autocomplete.bindTo('bounds', map);
+
+            var infowindow = new google.maps.InfoWindow();
+            var marker = new google.maps.Marker({
+                map: map,
+                anchorPoint: new google.maps.Point(0, -29)
+            });
+
+            autocomplete.addListener('place_changed', function() {
+                infowindow.close();
+                marker.setVisible(false);
+                var place = autocomplete.getPlace();
+                if (!place.geometry) {
+                    window.alert("No details available for input: '" + place.name + "'");
+                    return;
+                }
+
+                if (place.geometry.viewport) {
+                    map.fitBounds(place.geometry.viewport);
+                } else {
+                    map.setCenter(place.geometry.location);
+                    map.setZoom(17); 
+                }
+                marker.setIcon(({
+                    url: place.icon,
+                    size: new google.maps.Size(71, 71),
+                    origin: new google.maps.Point(0, 0),
+                    anchor: new google.maps.Point(17, 34),
+                    scaledSize: new google.maps.Size(35, 35)
+                }));
+                marker.setPosition(place.geometry.location);
+                coordinates = { Longitude: place.geometry.location.longitude, Latitude: place.geometry.location.latitude };
+                marker.setVisible(true);
+
+                var address = '';
+                if (place.address_components) {
+                    address = [(place.address_components[0] && place.address_components[0].short_name || '')].join(' ');
+                }
+
+                document.getElementById("city").value = place.name;
+                document.getElementById("lat").value = marker.position.lat().toFixed(6);
+                document.getElementById("lon").value = marker.position.lng().toFixed(6);
+
+
+                infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+                infowindow.open(map, marker);
+            });
+        });
+
+        function Initialize() {
+
+            google.maps.visualRefresh = true;
+
+            map = new google.maps.Map(document.getElementById("map"), {
+                zoom: 14,
+                center: { lat: 49.83826, lng: 24.02324 },
+                mapTypeId: google.maps.MapTypeId.G_NORMAL_MAP
+            });
+        }
+
+
+    </script>
+    </section>
+}
+
+<div>
+    @Html.ActionLink("Повернутися до списку візитів", "Index")
+</div>

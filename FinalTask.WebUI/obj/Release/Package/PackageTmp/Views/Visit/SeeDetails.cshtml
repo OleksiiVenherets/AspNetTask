@@ -1,0 +1,63 @@
+﻿@using FinalTask.WebUI.Models
+@model FinalTask.WebUI.Models.SeeVisitViewModel
+
+@{
+    ViewBag.Title = "Візит";
+}
+
+<h2>Інформація про візит</h2>
+
+<div>
+    <h4>Інформація про візит</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Date)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CityName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CityName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Comment)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Comment)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Rate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Rate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Photos)
+        </dt>
+
+        <dd>
+            @foreach (var photo in Model.Photos)
+            {
+                <img src="@Url.Action("GetImage", "Visit" , new {id=@photo.Id})", alt=@Model.CityName, height="300" />
+
+              }
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Редагувати", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Видалити", "Delete", new { id = Model.Id }) |
+    @Html.ActionLink("Повернутися до списку міст", "Index")
+</p>

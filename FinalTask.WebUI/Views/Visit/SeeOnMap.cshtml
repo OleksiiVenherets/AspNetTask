@@ -1,0 +1,50 @@
+﻿@model IEnumerable<FinalTask.WebUI.Models.SeeInMapModel>
+
+@{
+    ViewBag.Title = "SeeOnMap";
+}
+
+<h2>SeeOnMap</h2>
+
+<div id="map" style="height: 400px"></div>
+
+@Html.ActionLink("Повернутися до списку міст", "Index")
+
+@section scripts {
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5nbL9z4qIWU8bD6bLqnFC7dxvlT6wDas&callback=initMap">
+    </script>
+
+    <section class="scripts">
+        <script type="text/javascript">
+            var markers = [];
+        $(document).ready(function() {
+            initMap();
+        });
+
+        function initMap() {
+            var uluru = { lat: 51.483462, lng: 0.058620 };
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 4,
+                center: uluru
+            });
+            @foreach (var city in Model)
+            {
+                <text>
+                    
+                    var marker = new google.maps.Marker({
+                        position: { lat: @city.Latitude, lng: @city.Longitude },
+                        map: map
+                    });
+                
+                    markers.push(marker);
+                </text>
+            }
+        }
+        </script>
+
+    </section>
+}
+
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyA5nbL9z4qIWU8bD6bLqnFC7dxvlT6wDas&callback=initMap">
+</script>

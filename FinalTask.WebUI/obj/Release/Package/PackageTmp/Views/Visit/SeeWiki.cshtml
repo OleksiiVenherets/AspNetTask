@@ -1,0 +1,38 @@
+﻿<h2>@ViewBag.City</h2>
+
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.js"></script>
+<script src="~/Scripts/jquery-1.10.2.js"></script>
+<div id="output"></div>
+@Html.ActionLink("Повернутися до списку міст", "Index")
+@section scripts {
+    <section class="scripts">
+       <script type="text/javascript">
+            $(document).ready(function () {
+                var searchTerm = '@(ViewBag.City)';
+
+                var url = "https://uk.wikipedia.org/w/api.php?action=opensearch&search=" + searchTerm + "&format=json&callback=?";
+                $.ajax({
+                    url: url,
+                    type: 'GET',
+                    contentType: "application/json; charset=utf-8",
+                    async: false,
+                    dataType: "json",
+                    success: function(data, status, jqXHR) {
+                        $("#output").html();
+                        $("#output").prepend("<div><div class='well'><a href=" +
+                          data[3][0] +
+                          "><h2>" +
+                          data[1][0] +
+                          "</h2>" +
+                          "<p>" +
+                          data[2][0] +
+                          "</p></a></div></div>");
+                    }
+                });
+            });
+
+        </script>
+
+    </section>
+}

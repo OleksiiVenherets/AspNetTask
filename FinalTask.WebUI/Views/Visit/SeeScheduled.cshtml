@@ -1,0 +1,39 @@
+﻿@model IEnumerable<FinalTask.Domain.Entities.Visit>
+
+@{
+    ViewBag.Title = "SeeScheduled";
+}
+
+<h2>Заплановані візити</h2>
+
+@if (!Model.Any())
+{
+<tr>
+    <td colspan="3" class="text-center">Немає жодного запланованого візиту</td>
+</tr>
+}
+else
+{
+<div class="panel-body">
+    <table width="100%" class="table table-striped table-bordered table-hover" id="dataTables-example">
+        <thead>
+            <tr>
+                <th>Назва міста</th>
+                <th>Інформація про місто</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var visit in Model)
+            {
+            <tr class="odd grageA">
+                <td>@visit.City.Name</td>
+                <td class="center">@Html.ActionLink("Переглянути", "SeeWiki", "Visit", new { id = visit.CityId }, new { @class = "btn btn-primary" })</td>
+            </tr>
+            }
+        </tbody>
+    </table>
+</div>
+}
+@Html.ActionLink("Назад", "Index", "Visit", null, new { @class = "btn btn-primary" })
+@Html.ActionLink("Додати запланований візит", "AddScheduledVisit", "Visit", null, new { @class = "btn btn-primary" })
+@Html.ActionLink("Показати усі міста на карті", "SeeOnMap", "Visit", null, new { @class = "btn btn-primary" })

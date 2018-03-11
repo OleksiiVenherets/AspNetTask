@@ -1,0 +1,51 @@
+﻿@model FinalTask.WebUI.Models.LoginViewModel
+
+@{
+    ViewBag.Title = "Вхід на сайт";
+}
+<body ng-app="app">
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/angular-messages.min.js"></script>
+@section scripts
+{
+    <script>
+        var app = angular.module('app', ['ngMessages']);
+    </script>
+}
+    <h2>Увійти</h2>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Увійдіть на сайт</h3>
+                    </div>
+                    <div class="panel-body">
+                        @Html.ValidationSummary()
+
+                        @using (Html.BeginForm())
+                        {
+                            @Html.AntiForgeryToken()
+                            ;
+                            <input type="hidden" name="returnUrl" value="@ViewBag.returnUrl" />
+                            <div class="form-group">
+                                <input type="text" name="Name" class="form-control" placeholder="Email" ng-model="name" required />
+                                <div ng-messages="Name.$error">
+                                    <div ng-message="required">This field is required</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                              <input type="password" name="Password" class="form-control" placeholder="Password" ng-model="password" required />
+                                <div ng-messages="Password.$error">
+                                    <div ng-message="required">This field is required</div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary" type="submit">Увійти</button>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

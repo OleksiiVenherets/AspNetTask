@@ -1,0 +1,57 @@
+﻿@using FinalTask.Domain.Entities
+@using FinalTask.Domain.Infrastructure
+@model IEnumerable<AppRole>
+@{
+    ViewBag.Title = "Ролі";
+}
+
+<div class="panel panel-primary">
+    <div class="panel-heading">Roles</div>
+    <table class="table table-striped">
+        <tr>
+            <th>ID</th>
+            <th>Назва</th>
+            <th>Користувачі</th>
+            <th style="min-width: 150px"></th>
+        </tr>
+        @if (!Model.Any())
+        {
+            <tr>
+                <td colspan="4" class="text-center">Немає ролейй</td>
+            </tr>
+        }
+        else
+        {
+            foreach (var role in Model)
+            {
+                <tr>
+                    <td>@role.Id</td>
+                    <td>@role.Name</td>
+                    <td>
+                        @if (role.Users == null || role.Users.Count == 0)
+                        {
+                            @: Немає користувачів в цій ролі
+                        }
+                        else
+                        {
+                            <p>
+                                @string.Join(", ", role.Users.Select(x =>
+                                              Html.GetUserName(x.UserId)))
+                            </p>
+                        }
+                    </td>
+                    <td>
+                        @using (Html.BeginForm("Delete", "RoleAdmin", new { id = role.Id }))
+                        {
+                            @Html.ActionLink("Змінити", "Edit", new { id = role.Id },
+                                          new { @class = "btn btn-primary btn-xs", style = "float:left; margin-right:5px" })
+                            <button class="btn btn-danger btn-xs" type="submit">Видалити</button>
+                        }
+                    </td>
+                </tr>
+            }
+        }
+    </table>
+</div>
+@Html.ActionLink("Створити", "Create", null, new { @class = "btn btn-primary" })
+@Html.ActionLink("Повернутися", "Index", "Admin", null, new { @class = "btn btn-primary" })
